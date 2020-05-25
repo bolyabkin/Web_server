@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WeatherForecast.DomainObjects;
+using WeatherForecast.ApplicationServices.GetForecastListUseCase;
+using WeatherForecast.InfrastructureServices.Presenters;
 
 namespace WeatherForecast.WebService.Controllers
 {
@@ -13,28 +15,28 @@ namespace WeatherForecast.WebService.Controllers
     public class ForecastController : ControllerBase
     {
         private readonly ILogger<ForecastController> _logger;
+        private readonly IGetForecastListUseCase _getForecastListUseCase;
 
-        public ForecastController(ILogger<ForecastController> logger)
+        public ForecastController(ILogger<ForecastController> logger, IGetForecastListUseCase getForecastListUseCase)
         {
-            _logger = logger;
+            _logger = logger; 
+            _getForecastListUseCase = getForecastListUseCase;
         }
 
         [HttpGet]
-        public IEnumerable<Forecast> GetForecast()
+        public async Task<ActionResult> GetAllForecasts()
         {
-            return new List<Forecast>() 
-            { 
-                new Forecast() 
-                { 
-                    Id = 1, 
-                    Date = "10.02.2017 17:59:00",
-                    MinTemperature = -4,
-                    MaxTemperature = -2,
-                    TypeForecast ="двенадцатичасовой прогноз",
-                    StartForecast = "10.02.2017 21:00:00",
-                    EndForecast = "11.02.2017 09:00:00 "
-                } 
-            };
+            var presenter = new ForecastListPresenter();
+            await _getForecastListUseCase.Handle(GetForecastListUseCaseRequest.CreateAllForecastsRequest(), presenter);
+            return presenter.ContentResult;
+        }
+
+        [HttpGet("{routeId}")]
+        public async Task<ActionResult> GetForecast(long forecastId) 
+        {
+            var presenter = new ForecastListPresenter();
+            await _getForecastListUseCase.Handle(GetForecastListUseCaseRequest.CreateForecastRequest(forecastId), presenter);
+            return presenter.ContentResult;
         }
     }
 }
