@@ -1,0 +1,39 @@
+﻿<Window x:Class="WeatherForecast.DesktopClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WeatherForecast.DesktopClient"
+        mc:Ignorable="d"
+        Title="WeatherForecast" Height="450" Width="800">
+    <Grid TextBlock.FontFamily="Century Gothic" TextBlock.FontSize="14">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ListBox Grid.Column="0" Padding="5" Background="#4682B4" Foreground="White" ItemsSource="{Binding Forecasts}" SelectedItem="{Binding CurrentForecast}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="24" Text="{Binding Path=Date}"/>
+                        <TextBlock FontSize="14" Text="{Binding Path=TypeForecast}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Column="1" DataContext="{Binding CurrentForecast}">
+            <TextBlock FontSize="24" Padding="2" Text="Подробная информация"></TextBlock>
+            <TextBlock Padding="2" Text="{Binding Date}"></TextBlock>
+            <TextBlock Padding="2" Text="{Binding TypeForecast}"></TextBlock>
+            
+            <TextBlock Padding="2" Text="{Binding StartForecast}"></TextBlock>
+            <TextBlock Padding="2" Text="{Binding EndForecast }"></TextBlock>
+            <TextBlock Padding="2" Text="{Binding MinTemperature}"></TextBlock>
+            <TextBlock Padding="2" Text="{Binding MaxTemperature}"></TextBlock>
+
+        </StackPanel>
+    </Grid>
+
+</Window>
